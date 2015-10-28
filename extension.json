@@ -13,10 +13,10 @@
 	},
 	"Hooks": {
 		"CirrusSearchMappingConfig": [
-			"Wikibase\\Elastic\\Hooks::onCirrusSearchMappingConfig"
+			"\\Wikibase\\Elastic\\Hooks::onCirrusSearchMappingConfig"
 		],
 		"CirrusSearchBuildDocumentParse": [
-			"Wikibase\\Elastic\\Hook::onCirrusSearchBuildDocumentParse"
+			"\\Wikibase\\Elastic\\Hooks::onCirrusSearchBuildDocumentParse"
 		]
 	},
 	"config": {
