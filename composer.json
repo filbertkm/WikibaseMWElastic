@@ -1,0 +1,22 @@
+{
+	"name": "wikibase/elastic",
+	"type": "mediawiki-extension",
+	"description": "Wikibase integration with Elastic Search",
+	"keywords": [
+		"wikibase",
+		"wikidata"
+	],
+	"authors": [
+		{
+			"name": "Katie Filbert"
+		}
+	],
+	"require": {
+		"php": ">=5.3.2"
+	},
+	"autoload": {
+		"psr-4": {
+			"Wikibase\\Elastic\\": "src"
+		}
+	}
+}
