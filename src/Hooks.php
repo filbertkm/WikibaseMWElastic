@@ -8,8 +8,8 @@ use Content;
 use Elastica\Document;
 use ParserOutput;
 use Title;
+use Wikibase\Elastic\Document\DocumentTermsBuilder;
 use Wikibase\Elastic\Mapping\TermMappingBuilder;
-use Wikibase\EntityContent;
 use Wikibase\Lib\WikibaseContentLanguages;
 
 /**
@@ -56,17 +56,11 @@ class Hooks {
 		ParserOutput $parserOutput,
 		Connection $connection
 	) {
-		if ( !$content instanceof EntityContent || $content->isRedirect() === true ) {
-			return true;
-		}
+		$documentTermsBuilder = new DocumentTermsBuilder();
+		$properties = $documentTermsBuilder->build( $content );
 
-		$terms = $content->getEntity()->getFingerprint();
-		$labels = $terms->getLabels()->toTextArray();
-
-		$labelsArray = array();
-
-		foreach ( $labels as $languageCode => $label ) {
-
+		foreach ( $properties as $property => $data ) {
+			$document->set( $property, $data );
 		}
 
 		return true;

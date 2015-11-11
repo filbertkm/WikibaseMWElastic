@@ -19,8 +19,8 @@ class TermMappingBuilder {
 	public function getProperties() {
 		return array(
 			'labels' => array(
-				'type' => 'string',
-				'fields' => $this->getLabelFields()
+				'type' => 'nested',
+				'properties' => $this->getLabelFields()
 			),
 		);
 	}
