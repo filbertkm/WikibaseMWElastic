@@ -17,6 +17,12 @@
 		],
 		"CirrusSearchBuildDocumentParse": [
 			"\\Wikibase\\Elastic\\Hooks::onCirrusSearchBuildDocumentParse"
+		],
+		"CirrusSearchExtractSpecialSyntax": [
+			"\\Wikibase\\Elastic\\Hooks::onCirrusSearchExtractSpecialSyntax"
+		],
+		"WikibaseTextForSearchIndex": [
+			"\\Wikibase\\Elastic\\Hooks::onWikibaseTextForSearchIndex"
 		]
 	},
 	"config": {
