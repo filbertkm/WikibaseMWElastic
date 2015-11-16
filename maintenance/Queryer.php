@@ -22,9 +22,9 @@ class Queryer extends Maintenance {
 		$data = array();
 
 		$config = ConfigFactory::getDefaultInstance()->makeConfig( 'CirrusSearch' );
-		$conn = Connection::getPool( $config );
+		$connection = new Connection( $config );
 
-		$client = $conn->getClient();
+		$client = $connection->getClient();
 
 		$result = $client->request(
 			$path,

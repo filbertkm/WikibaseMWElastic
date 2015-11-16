@@ -28,6 +28,12 @@ class Hooks {
 		array &$config,
 		MappingConfigBuilder $mappingConfigBuilder
 	) {
+		// @todo index entity type? (e.g. 'item' or 'property')
+		//
+		// We do have namespace so this might be redundant if we always
+		// have a 1:1 relation between entity type and namespace, but
+		// don't think we should make that assumption.
+
 		$wikibaseContentLanguages = new WikibaseContentLanguages();
 		$languageCodes = $wikibaseContentLanguages->getLanguages();
 
