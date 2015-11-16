@@ -19,7 +19,7 @@
 			"\\Wikibase\\Elastic\\Hooks::onCirrusSearchBuildDocumentParse"
 		],
 		"CirrusSearchExtractSpecialSyntax": [
-			"\\Wikibase\\Elastic\\Hooks::onCirrusSearchExtractSpecialSyntax"
+			"\\Wikibase\\Elastic\\Hooks\\SpecialSearchSyntaxHookHandler::onCirrusSearchExtractSpecialSyntax"
 		],
 		"WikibaseTextForSearchIndex": [
 			"\\Wikibase\\Elastic\\Hooks::onWikibaseTextForSearchIndex"

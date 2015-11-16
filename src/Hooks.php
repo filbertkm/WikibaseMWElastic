@@ -67,39 +67,6 @@ class Hooks {
 		return true;
 	}
 
-	public static function onCirrusSearchExtractSpecialSyntax(
-		$key,
-		$searchText,
-		&$filterDestination,
-		&$searchContainedSyntax,
-		&$match
-	) {
-		$languageCodes = array( 'de', 'en', 'es' );
-		$keys = array_map( function( $key ) {
-				return "label-$key";
-			}, $languageCodes
-		);
-
-		preg_match( '/label-([\w]+)/', $key, $matches );
-
-		if ( isset( $matches[1] ) ) {
-			$languageCode = $matches[1];
-			$searchContainedSyntax = true;
-
-			$nested = new \Elastica\Filter\Nested();
-			$nested->setPath( 'labels' );
-			$nested->setFilter(
-				new \Elastica\Filter\Query(
-					new \Elastica\Query\Match( $languageCode, $searchText )
-				)
-			);
-
-			$filterDestination[] = $nested;
-		}
-
-		return false;
-	}
-
 	public static function onWikibaseTextForSearchIndex( EntityContent $content, &$text ) {
 		$text = '';
 	}
