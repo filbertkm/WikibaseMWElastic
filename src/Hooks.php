@@ -38,10 +38,10 @@ class Hooks {
 		$languageCodes = $wikibaseContentLanguages->getLanguages();
 
 		$termMappingBuilder = new TermMappingBuilder( $languageCodes );
-		$properties = $termMappingBuilder->getProperties();
+		$fields = $termMappingBuilder->getFields();
 
-		foreach ( $properties as $property => $fields ) {
-			$config['page']['properties'][$property] = $fields;
+		foreach ( $fields as $property => $propertyFields ) {
+			$config['page']['properties'][$property] = $propertyFields;
 		}
 
 		return true;

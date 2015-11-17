@@ -16,16 +16,16 @@ class TermMappingBuilder {
 		$this->languageCodes = $languageCodes;
 	}
 
-	public function getProperties() {
+	public function getFields() {
 		return array(
 			'labels' => array(
 				'type' => 'nested',
-				'properties' => $this->getLabelFields()
+				'properties' => $this->getLabelProperties()
 			),
 		);
 	}
 
-	private function getLabelFields() {
+	private function getLabelProperties() {
 		$fields = array();
 
 		foreach ( $this->languageCodes as $languageCode ) {
