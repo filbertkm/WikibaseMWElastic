@@ -43,7 +43,7 @@ class WikibaseFieldsIndexer {
 	 * @return array
 	 */
 	private function indexLabels( Fingerprint $terms ) {
-		return $this->buildTermsData( $terms->getLabels() );
+		return $this->buildTermsData( $terms->getLabels(), 'label' );
 	}
 
 	/**
@@ -52,7 +52,7 @@ class WikibaseFieldsIndexer {
 	 * @return array
 	 */
 	private function indexDescriptions( Fingerprint $terms ) {
-		return $this->buildTermsData( $terms->getDescriptions() );
+		return $this->buildTermsData( $terms->getDescriptions(), 'description' );
 	}
 
 	/**
@@ -60,11 +60,11 @@ class WikibaseFieldsIndexer {
 	 *
 	 * @return array
 	 */
-	private function buildTermsData( $terms ) {
+	private function buildTermsData( $terms, $prefix ) {
 		$termsArray = array();
 
 		foreach ( $terms->toTextArray() as $languageCode => $term ) {
-			$termsArray[$languageCode] = $term;
+			$termsArray[$prefix . '_' . $languageCode] = $term;
 		}
 
 		return $termsArray;

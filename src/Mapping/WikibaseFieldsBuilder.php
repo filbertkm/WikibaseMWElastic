@@ -20,11 +20,11 @@ class WikibaseFieldsBuilder {
 		return array(
 			'labels' => array(
 				'type' => 'nested',
-				'properties' => $this->getTermFieldProperties()
+				'properties' => $this->getTermFieldProperties( 'label' )
 			),
 			'descriptions' => array(
 				'type' => 'nested',
-				'properties' => $this->getTermFieldProperties()
+				'properties' => $this->getTermFieldProperties( 'description' )
 			),
 			'entity_type' => array(
 				'type' => 'string'
@@ -32,14 +32,15 @@ class WikibaseFieldsBuilder {
 			'sitelink_count' => array(
 				'type' => 'long'
 			),
+
 		);
 	}
 
-	private function getTermFieldProperties() {
+	private function getTermFieldProperties( $prefix ) {
 		$fields = array();
 
 		foreach ( $this->languageCodes as $languageCode ) {
-			$fields[$languageCode] = array(
+			$fields[$prefix . '_' . $languageCode] = array(
 				'type' => 'string'
 			);
 		}

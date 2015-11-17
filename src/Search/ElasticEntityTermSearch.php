@@ -84,7 +84,7 @@ class ElasticEntityTermSearch implements EntityTermSearch {
 	private function buildQuery( TermIndexEntry $termIndexEntry ) {
 		$prefixQuery = new \Elastica\Query\Prefix();
 		$prefixQuery->setPrefix(
-			$termIndexEntry->getLanguage(),
+			'label_' . $termIndexEntry->getLanguage(),
 			$termIndexEntry->getText()
 		);
 
@@ -102,7 +102,7 @@ class ElasticEntityTermSearch implements EntityTermSearch {
 	private function getTermIndexEntryFromResult( $result, $languageCode ) {
 		$data = $result->getData();
 
-		$label = $data['labels'][$languageCode];
+		$label = $data['labels']['label_' . $languageCode];
 		$entityId = new ItemId( $data['title'] );
 
 		return new TermIndexEntry( array(
