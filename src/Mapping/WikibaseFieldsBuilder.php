@@ -2,7 +2,7 @@
 
 namespace Wikibase\Elastic\Mapping;
 
-class TermMappingBuilder {
+class WikibaseFieldsBuilder {
 
 	/**
 	 * @var string[]
@@ -20,12 +20,22 @@ class TermMappingBuilder {
 		return array(
 			'labels' => array(
 				'type' => 'nested',
-				'properties' => $this->getLabelProperties()
+				'properties' => $this->getTermFieldProperties()
+			),
+			'descriptions' => array(
+				'type' => 'nested',
+				'properties' => $this->getTermFieldProperties()
+			),
+			'entity_type' => array(
+				'type' => 'string'
+			),
+			'sitelink_count' => array(
+				'type' => 'long'
 			),
 		);
 	}
 
-	private function getLabelProperties() {
+	private function getTermFieldProperties() {
 		$fields = array();
 
 		foreach ( $this->languageCodes as $languageCode ) {

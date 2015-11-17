@@ -8,8 +8,8 @@ use Content;
 use Elastica\Document;
 use ParserOutput;
 use Title;
-use Wikibase\Elastic\Document\DocumentTermsBuilder;
-use Wikibase\Elastic\Mapping\TermMappingBuilder;
+use Wikibase\Elastic\Document\WikibaseFieldsIndexer;
+use Wikibase\Elastic\Mapping\WikibaseFieldsBuilder;
 use Wikibase\EntityContent;
 use Wikibase\Lib\WikibaseContentLanguages;
 
@@ -37,8 +37,8 @@ class Hooks {
 		$wikibaseContentLanguages = new WikibaseContentLanguages();
 		$languageCodes = $wikibaseContentLanguages->getLanguages();
 
-		$termMappingBuilder = new TermMappingBuilder( $languageCodes );
-		$fields = $termMappingBuilder->getFields();
+		$fieldsBuilder = new WikibaseFieldsBuilder( $languageCodes );
+		$fields = $fieldsBuilder->getFields();
 
 		foreach ( $fields as $property => $propertyFields ) {
 			$config['page']['properties'][$property] = $propertyFields;
@@ -63,8 +63,8 @@ class Hooks {
 		ParserOutput $parserOutput,
 		Connection $connection
 	) {
-		$documentTermsBuilder = new DocumentTermsBuilder();
-		$properties = $documentTermsBuilder->build( $content );
+		$fieldsIndexer = new WikibaseFieldsIndexer();
+		$properties = $fieldsIndexer->build( $content );
 
 		foreach ( $properties as $property => $data ) {
 			$document->set( $property, $data );
