@@ -17,8 +17,8 @@ class WikibaseFieldsIndexer {
 	 *
 	 * @return array
 	 */
-	public function build( Content $content ) {
-		if ( !$content instanceof EntityContent || $content->isRedirect() === true ) {
+	public function build( EntityContent $content ) {
+		if ( $content->isRedirect() === true ) {
 			return array();
 		}
 
@@ -72,10 +72,11 @@ class WikibaseFieldsIndexer {
 
 	/**
 	 * @param TermList $terms
+	 * @param string $prefix
 	 *
 	 * @return array
 	 */
-	private function buildTermsData( $terms, $prefix ) {
+	private function buildTermsData( TermList $terms, $prefix ) {
 		$termsArray = array();
 
 		foreach ( $terms->toTextArray() as $languageCode => $term ) {
