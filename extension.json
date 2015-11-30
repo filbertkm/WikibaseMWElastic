@@ -25,9 +25,6 @@
 			"\\Wikibase\\Elastic\\Hooks::onWikibaseTextForSearchIndex"
 		]
 	},
-	"config": {
-		"WBElasticSourceApi": "https://www.wikidata.org/w/api.php"
-	},
 	"MessagesDirs": {
 		"WikibaseElastic": [
 			"i18n"
