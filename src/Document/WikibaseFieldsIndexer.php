@@ -3,8 +3,10 @@
 namespace Wikibase\Elastic\Document;
 
 use Content;
+use Wikibase\DataModel\Entity\Entity;
 use Wikibase\DataModel\Entity\Item;
 use Wikibase\DataModel\Term\Fingerprint;
+use Wikibase\DataModel\Statement\StatementListHolder;
 use Wikibase\DataModel\Term\TermList;
 use Wikibase\EntityContent;
 
@@ -27,14 +29,27 @@ class WikibaseFieldsIndexer {
 			'labels' => $this->indexLabels( $terms ),
 			'descriptions' => $this->indexDescriptions( $terms ),
 			'entity_type' => $entity->getType(),
-			'sitelink_count' => 0
+			'sitelink_count' => $this->getSiteLinkCount( $entity ),
+			'statement_count' => $this->getStatementCount( $entity )
 		);
 
+		return $fields;
+	}
+
+	private function getSiteLinkCount( Entity $entity ) {
 		if ( $entity instanceof Item ) {
-			$fields['sitelink_count'] = $entity->getSiteLinkList()->count();
+			return $entity->getSiteLinkList()->count();
 		}
 
-		return $fields;
+		return 0;
+	}
+
+	private function getStatementCount( Entity $entity ) {
+		if ( $entity instanceof StatementListHolder ) {
+			return $entity->getStatements()->count();
+		}
+
+		return 0;
 	}
 
 	/**

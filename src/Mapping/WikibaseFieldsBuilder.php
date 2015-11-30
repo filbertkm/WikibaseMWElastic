@@ -32,7 +32,9 @@ class WikibaseFieldsBuilder {
 			'sitelink_count' => array(
 				'type' => 'long'
 			),
-
+			'statement_count' => array(
+				'type' => 'long'
+			)
 		);
 	}
 
