@@ -7,7 +7,7 @@ use Content;
 use Elastica\Document;
 use ParserOutput;
 use Title;
-use Wikibase\Elastic\Document\WikibaseFieldsIndexer;
+use Wikibase\Elastic\Fields\WikibaseFieldsDefinition;
 use Wikibase\EntityContent;
 use Wikibase\Lib\WikibaseContentLanguages;
 
@@ -15,6 +15,11 @@ use Wikibase\Lib\WikibaseContentLanguages;
  * Extension hooks
  */
 class BuildDocumentParseHookHandler {
+
+	/**
+	 * @var WikibaseFieldsDefinition
+	 */
+	private $fieldsDefinition;
 
 	/**
 	 * @param Document $document
@@ -42,16 +47,18 @@ class BuildDocumentParseHookHandler {
 	 * @return BuildDocumentParserHookHandler
 	 */
 	public static function newFromGlobalState() {
+		$contentLanguages = new WikibaseContentLanguages();
+
 		return new self(
-			new WikibaseFieldsIndexer()
+			new WikibaseFieldsDefinition( $contentLanguages->getLanguages() )
 		);
 	}
 
 	/**
-	 * @param WikibaseFieldsIndexer $fieldsIndexer
+	 * @param WikibaseFieldsDefinition $fieldsDefinition
 	 */
-	public function __construct( WikibaseFieldsIndexer $fieldsIndexer ) {
-		$this->fieldsIndexer = $fieldsIndexer;
+	public function __construct( WikibaseFieldsDefinition $fieldsDefinition ) {
+		$this->fieldsDefinition = $fieldsDefinition;
 	}
 
 	/**
@@ -59,14 +66,16 @@ class BuildDocumentParseHookHandler {
 	 * @param Content $content
 	 */
 	public function indexExtraFields( Document $document, Content $content ) {
-		if ( !$content instanceof EntityContent ) {
+		if ( !$content instanceof EntityContent || $content->isRedirect() === true ) {
 			return;
 		}
 
-		$properties = $this->fieldsIndexer->build( $content );
+		$fields = $this->fieldsDefinition->getFields();
+		$entity = $content->getEntity();
 
-		foreach ( $properties as $property => $data ) {
-			$document->set( $property, $data );
+		foreach ( $fields as $fieldName => $field ) {
+			$data = $field->buildData( $entity );
+			$document->set( $fieldName, $data );
 		}
 	}
 
