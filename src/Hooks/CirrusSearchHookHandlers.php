@@ -3,23 +3,21 @@
 namespace Wikibase\Elastic\Hooks;
 
 use CirrusSearch\Connection;
+use CirrusSearch\Maintenance\MappingConfigBuilder;
 use Content;
 use Elastica\Document;
 use ParserOutput;
 use Title;
-use Wikibase\Elastic\Fields\WikibaseFieldsDefinition;
+use Wikibase\Elastic\Fields\WikibaseFieldDefinitions;
 use Wikibase\EntityContent;
 use Wikibase\Lib\WikibaseContentLanguages;
 
-/**
- * Extension hooks
- */
-class BuildDocumentParseHookHandler {
+class CirrusSearchHookHandlers {
 
 	/**
 	 * @var WikibaseFieldsDefinition
 	 */
-	private $fieldsDefinition;
+	private $fieldDefinitions;
 
 	/**
 	 * @param Document $document
@@ -44,21 +42,37 @@ class BuildDocumentParseHookHandler {
 	}
 
 	/**
+	 * @param array &$config
+	 * @param MappingConfigBuilder $mappingConfigBuilder
+	 *
+	 * @return bool
+	 */
+	public static function onCirrusSearchMappingConfig(
+		array &$config,
+		MappingConfigBuilder $mappingConfigBuilder
+	) {
+		$handler = self::newFromGlobalState();
+		$handler->addExtraFields( $config );
+
+		return true;
+	}
+
+	/**
 	 * @return BuildDocumentParserHookHandler
 	 */
 	public static function newFromGlobalState() {
 		$contentLanguages = new WikibaseContentLanguages();
 
 		return new self(
-			new WikibaseFieldsDefinition( $contentLanguages->getLanguages() )
+			new WikibaseFieldDefinitions( $contentLanguages->getLanguages() )
 		);
 	}
 
 	/**
-	 * @param WikibaseFieldsDefinition $fieldsDefinition
+	 * @param WikibaseFieldDefinitions $fieldDefinitions
 	 */
-	public function __construct( WikibaseFieldsDefinition $fieldsDefinition ) {
-		$this->fieldsDefinition = $fieldsDefinition;
+	public function __construct( WikibaseFieldDefinitions $fieldDefinitions ) {
+		$this->fieldDefinitions = $fieldDefinitions;
 	}
 
 	/**
@@ -70,12 +84,23 @@ class BuildDocumentParseHookHandler {
 			return;
 		}
 
-		$fields = $this->fieldsDefinition->getFields();
+		$fields = $this->fieldDefinitions->getFields();
 		$entity = $content->getEntity();
 
 		foreach ( $fields as $fieldName => $field ) {
 			$data = $field->buildData( $entity );
 			$document->set( $fieldName, $data );
+		}
+	}
+
+	/**
+	 * @param array &$config
+	 */
+	public function addExtraFields( array &$config ) {
+		$fields = $this->fieldDefinitions->getFields();
+
+		foreach ( $fields as $fieldName => $field ) {
+			$config['page']['properties'][$fieldName] = $field->getMapping();
 		}
 	}
 

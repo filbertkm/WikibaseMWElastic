@@ -2,7 +2,7 @@
 
 namespace Wikibase\Elastic\Fields;
 
-class WikibaseFieldsDefinition {
+class WikibaseFieldDefinitions {
 
 	/**
 	 * @var string[]
