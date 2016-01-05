@@ -22,9 +22,7 @@ class WikibaseFieldDefinitions {
 	public function getFields() {
 		return array(
 			'labels' => new LabelField( $this->languageCodes ),
-			'descriptions' => new DescriptionField( $this->languageCodes ),
-			'sitelink_count' => new SiteLinkCountField(),
-			'statement_count' => new StatementCountField()
+			'descriptions' => new DescriptionField( $this->languageCodes )
 		);
 	}
 
