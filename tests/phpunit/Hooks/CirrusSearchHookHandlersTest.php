@@ -45,8 +45,17 @@ class CirrusSearchHookHandlersTest extends PHPUnit_Framework_TestCase {
 			$connection
 		);
 
-		$this->assertSame( 1, $document->get( 'sitelink_count' ), 'sitelink_count' );
-		$this->assertSame( 1, $document->get( 'statement_count' ), 'statement_count' );
+		$this->assertSame(
+			array( 'label_en' => 'kitten' ),
+			$document->get( 'labels' ),
+			'labels'
+		);
+
+		$this->assertSame(
+			array( 'description_en' => 'young cat' ),
+			$document->get( 'descriptions' ),
+			'descriptions'
+		);
 	}
 
 	public function testOnCirrusSearchMappingConfig() {
@@ -65,7 +74,7 @@ class CirrusSearchHookHandlersTest extends PHPUnit_Framework_TestCase {
 		CirrusSearchHookHandlers::onCirrusSearchMappingConfig( $config, $mappingConfigBuilder );
 
 		$this->assertSame(
-			array( 'labels', 'descriptions', 'sitelink_count', 'statement_count' ),
+			array( 'labels', 'descriptions' ),
 			array_keys( $config['page']['properties'] )
 		);
 	}
@@ -79,8 +88,17 @@ class CirrusSearchHookHandlersTest extends PHPUnit_Framework_TestCase {
 		$hookHandlers = new CirrusSearchHookHandlers( $fieldDefinitions );
 		$hookHandlers->indexExtraFields( $document, $content );
 
-		$this->assertSame( 1, $document->get( 'sitelink_count' ), 'sitelink_count' );
-		$this->assertSame( 1, $document->get( 'statement_count' ), 'statement_count' );
+		$this->assertEquals(
+			array( 'label_en' => 'kitten' ),
+			$document->get( 'labels' ),
+			'labels'
+		);
+
+		$this->assertEquals(
+			array( 'description_en' => 'young cat' ),
+			$document->get( 'descriptions' ),
+			'descriptions'
+		);
 	}
 
 	public function testAddExtraFields() {
@@ -118,12 +136,6 @@ class CirrusSearchHookHandlersTest extends PHPUnit_Framework_TestCase {
 								'type' => 'string'
 							)
 						)
-					),
-					'sitelink_count' => array(
-						'type' => 'long'
-					),
-					'statement_count' => array(
-						'type' => 'long'
 					)
 				)
 			)
@@ -140,10 +152,9 @@ class CirrusSearchHookHandlersTest extends PHPUnit_Framework_TestCase {
 
 	private function getContent() {
 		$item = new Item();
-		$item->getSiteLinkList()->addNewSiteLink( 'enwiki', 'Kitten' );
-		$item->getStatements()->addNewStatement(
-			new PropertyNoValueSnak( new PropertyId( 'P1' ) )
-		);
+
+		$item->setLabel( 'en', 'kitten' );
+		$item->setDescription( 'en', 'young cat' );
 
 		$entityContentFactory = WikibaseRepo::getDefaultInstance()->getEntityContentFactory();
 
