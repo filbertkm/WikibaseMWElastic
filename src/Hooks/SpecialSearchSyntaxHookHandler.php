@@ -3,7 +3,7 @@
 namespace Wikibase\Elastic\Hooks;
 
 use Wikibase\Lib\ContentLanguages;
-use Wikibase\Lib\WikibaseContentLanguages;
+use Wikibase\Lib\MediaWikiContentLanguages;
 
 class SpecialSearchSyntaxHookHandler {
 
@@ -32,7 +32,7 @@ class SpecialSearchSyntaxHookHandler {
 
 	private static function newFromGlobalState() {
 		return new self(
-			new WikibaseContentLanguages()
+			new MediaWikiContentLanguages()
 		);
 	}
 

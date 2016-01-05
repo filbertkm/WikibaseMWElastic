@@ -10,7 +10,7 @@ use ParserOutput;
 use Title;
 use Wikibase\Elastic\Fields\WikibaseFieldDefinitions;
 use Wikibase\EntityContent;
-use Wikibase\Lib\WikibaseContentLanguages;
+use Wikibase\Lib\MediaWikiContentLanguages;
 
 class CirrusSearchHookHandlers {
 
@@ -61,7 +61,7 @@ class CirrusSearchHookHandlers {
 	 * @return BuildDocumentParserHookHandler
 	 */
 	public static function newFromGlobalState() {
-		$contentLanguages = new WikibaseContentLanguages();
+		$contentLanguages = new MediaWikiContentLanguages();
 
 		return new self(
 			new WikibaseFieldDefinitions( $contentLanguages->getLanguages() )
