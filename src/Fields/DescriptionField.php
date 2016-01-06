@@ -11,7 +11,7 @@ class DescriptionField extends TermListField implements Field {
 	 *
 	 * @return array
 	 */
-	public function buildData( EntityDocument $entity ) {
+	public function getFieldData( EntityDocument $entity ) {
 		$terms = $entity->getFingerprint();
 
 		return $this->buildTermsData( $terms->getDescriptions() );

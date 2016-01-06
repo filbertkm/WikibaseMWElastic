@@ -21,7 +21,7 @@ class SiteLinkCountField implements Field {
 	 *
 	 * @return mixed
 	 */
-	public function buildData( EntityDocument $entity ) {
+	public function getFieldData( EntityDocument $entity ) {
 		if ( $entity instanceof Item ) {
 			return $entity->getSiteLinkList()->count();
 		}

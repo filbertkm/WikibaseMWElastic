@@ -88,7 +88,7 @@ class CirrusSearchHookHandlers {
 		$entity = $content->getEntity();
 
 		foreach ( $fields as $fieldName => $field ) {
-			$data = $field->buildData( $entity );
+			$data = $field->getFieldData( $entity );
 			$document->set( $fieldName, $data );
 		}
 	}

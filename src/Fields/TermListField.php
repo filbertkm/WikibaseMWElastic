@@ -34,7 +34,7 @@ abstract class TermListField implements Field {
 	 *
 	 * @return array
 	 */
-	abstract public function buildData( EntityDocument $entity );
+	abstract public function getFieldData( EntityDocument $entity );
 
 	/**
 	 * @return string

@@ -21,7 +21,7 @@ class StatementCountField implements Field {
 	 *
 	 * @return mixed
 	 */
-	public function buildData( EntityDocument $entity ) {
+	public function getFieldData( EntityDocument $entity ) {
 		if ( $entity instanceof StatementListHolder ) {
 			return $entity->getStatements()->count();
 		}
