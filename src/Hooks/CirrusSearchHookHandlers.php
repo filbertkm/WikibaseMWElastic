@@ -64,7 +64,10 @@ class CirrusSearchHookHandlers {
 		$contentLanguages = new MediaWikiContentLanguages();
 
 		return new self(
-			new WikibaseFieldDefinitions( $contentLanguages->getLanguages() )
+			new WikibaseFieldDefinitions(
+				array( 'labels', 'descriptions' ),
+				$contentLanguages->getLanguages()
+			)
 		);
 	}
 

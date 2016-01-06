@@ -147,7 +147,7 @@ class CirrusSearchHookHandlersTest extends PHPUnit_Framework_TestCase {
 	private function newFieldDefinitions() {
 		$languageCodes = array( 'ar', 'es' );
 
-		return new WikibaseFieldDefinitions( $languageCodes );
+		return new WikibaseFieldDefinitions( array( 'labels', 'descriptions' ), $languageCodes );
 	}
 
 	private function getContent() {
