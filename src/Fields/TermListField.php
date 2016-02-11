@@ -49,9 +49,15 @@ abstract class TermListField implements Field {
 		$fields = array();
 
 		foreach ( $this->languageCodes as $languageCode ) {
-			$fields[$prefix . '_' . $languageCode] = array(
-				'type' => 'string'
+			$key = $prefix . '_' . $languageCode;
+			$fields[$key] = array(
+				'type' => 'string',
+				'copy_to' => array( 'all' )
 			);
+
+			if ( $prefix === 'label' ) {
+				$fields[$key]['copy_to'][] = 'all_near_match';
+			}
 		}
 
 		return $fields;

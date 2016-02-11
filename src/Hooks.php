@@ -14,7 +14,9 @@ class Hooks {
 	 * @param string &$text
 	 */
 	public static function onWikibaseTextForSearchIndex( EntityContent $content, &$text ) {
-		// $text = '';
+		$text = '';
+
+		return false;
 	}
 
 }
