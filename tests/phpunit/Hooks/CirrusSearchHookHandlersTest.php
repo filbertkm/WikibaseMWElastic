@@ -7,8 +7,6 @@ use ParserOutput;
 use PHPUnit_Framework_TestCase;
 use Title;
 use Wikibase\DataModel\Entity\Item;
-use Wikibase\DataModel\Entity\PropertyId;
-use Wikibase\DataModel\Snak\PropertyNoValueSnak;
 use Wikibase\Elastic\Fields\WikibaseFieldDefinitions;
 use Wikibase\Elastic\Hooks\CirrusSearchHookHandlers;
 use Wikibase\Repo\WikibaseRepo;
@@ -119,10 +117,12 @@ class CirrusSearchHookHandlersTest extends PHPUnit_Framework_TestCase {
 						'type' => 'nested',
 						'properties' => array(
 							'label_ar' => array(
-								'type' => 'string'
+								'type' => 'string',
+								'copy_to' => array( 'all', 'all_near_match' )
 							),
 							'label_es' => array(
-								'type' => 'string'
+								'type' => 'string',
+								'copy_to' => array( 'all', 'all_near_match' )
 							)
 						)
 					),
@@ -130,10 +130,12 @@ class CirrusSearchHookHandlersTest extends PHPUnit_Framework_TestCase {
 						'type' => 'nested',
 						'properties' => array(
 							'description_ar' => array(
-								'type' => 'string'
+								'type' => 'string',
+								'copy_to' => array( 'all' )
 							),
 							'description_es' => array(
-								'type' => 'string'
+								'type' => 'string',
+								'copy_to' => array( 'all' )
 							)
 						)
 					)
