@@ -4,7 +4,6 @@ namespace Wikibase\Elastic\Tests\Fields;
 
 use PHPUnit_Framework_TestCase;
 use Wikibase\Elastic\Fields\WikibaseFieldDefinitions;
-use Wikibase\Lib\MediaWikiContentLanguages;
 
 /**
  * @covers Wikibase\Elastic\Fields\WikibaseFieldDefinitions
@@ -19,12 +18,12 @@ class WikibaseFieldDefinitionsTest extends PHPUnit_Framework_TestCase {
 	public function testGetFields() {
 		$wikibaseFieldDefinitions = new WikibaseFieldDefinitions(
 			array( 'labels' ),
-			$this->getLanguageCodes()
+			array( 'ar', 'en', 'es' )
 		);
 
 		$fields = $wikibaseFieldDefinitions->getFields();
 
-		$expectedFieldNames = array( 'labels' );
+		$expectedFieldNames = array( 'label_ar', 'label_en', 'label_es' );
 
 		$this->assertSame( $expectedFieldNames, array_keys( $fields ) );
 	}
@@ -32,7 +31,7 @@ class WikibaseFieldDefinitionsTest extends PHPUnit_Framework_TestCase {
 	public function testGetFields_instanceOfSearchIndexField() {
 		$wikibaseFieldDefinitions = new WikibaseFieldDefinitions(
 			array( 'labels' ),
-			$this->getLanguageCodes()
+			array( 'de', 'es', 'ja' )
 		);
 
 		foreach ( $wikibaseFieldDefinitions->getFields() as $fieldName => $field ) {
@@ -44,10 +43,13 @@ class WikibaseFieldDefinitionsTest extends PHPUnit_Framework_TestCase {
 		}
 	}
 
-	private function getLanguageCodes() {
-		$contentLanguages = new MediaWikiContentLanguages();
+	public function testConstruct_withInvalidType() {
+		$this->setExpectedException( 'InvalidArgumentException' );
 
-		return $contentLanguages->getLanguages();
+		$wikibaseFieldDefinitions = new WikibaseFieldDefinitions(
+			array( 'kittens' ),
+			array( 'de', 'es', 'fr' )
+		);
 	}
 
 }

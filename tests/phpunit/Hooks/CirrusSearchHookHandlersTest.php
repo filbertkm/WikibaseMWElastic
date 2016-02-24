@@ -44,15 +44,15 @@ class CirrusSearchHookHandlersTest extends PHPUnit_Framework_TestCase {
 		);
 
 		$this->assertSame(
-			array( 'label_en' => 'kitten' ),
-			$document->get( 'labels' ),
-			'labels'
+			'kitten',
+			$document->get( 'label_en' ),
+			'en label'
 		);
 
 		$this->assertSame(
-			array( 'description_en' => 'young cat' ),
-			$document->get( 'descriptions' ),
-			'descriptions'
+			'young cat',
+			$document->get( 'description_en' ),
+			'en description'
 		);
 	}
 
@@ -71,8 +71,8 @@ class CirrusSearchHookHandlersTest extends PHPUnit_Framework_TestCase {
 
 		CirrusSearchHookHandlers::onCirrusSearchMappingConfig( $config, $mappingConfigBuilder );
 
-		$this->assertSame(
-			array( 'labels', 'descriptions' ),
+		$this->assertInternalType(
+			'array',
 			array_keys( $config['page']['properties'] )
 		);
 	}
@@ -87,15 +87,15 @@ class CirrusSearchHookHandlersTest extends PHPUnit_Framework_TestCase {
 		$hookHandlers->indexExtraFields( $document, $content );
 
 		$this->assertEquals(
-			array( 'label_en' => 'kitten' ),
-			$document->get( 'labels' ),
-			'labels'
+			'kitten',
+			$document->get( 'label_en' ),
+			'en label'
 		);
 
 		$this->assertEquals(
-			array( 'description_en' => 'young cat' ),
-			$document->get( 'descriptions' ),
-			'descriptions'
+			'young cat',
+			$document->get( 'description_en' ),
+			'en description'
 		);
 	}
 
@@ -113,31 +113,29 @@ class CirrusSearchHookHandlersTest extends PHPUnit_Framework_TestCase {
 		$expected = array(
 			'page' => array(
 				'properties' => array(
-					'labels' => array(
-						'type' => 'nested',
-						'properties' => array(
-							'label_ar' => array(
-								'type' => 'string',
-								'copy_to' => array( 'all', 'all_near_match' )
-							),
-							'label_es' => array(
-								'type' => 'string',
-								'copy_to' => array( 'all', 'all_near_match' )
-							)
-						)
+					'label_ar' => array(
+						'type' => 'string',
+						'copy_to' => array( 'all', 'all_near_match' )
 					),
-					'descriptions' => array(
-						'type' => 'nested',
-						'properties' => array(
-							'description_ar' => array(
-								'type' => 'string',
-								'copy_to' => array( 'all' )
-							),
-							'description_es' => array(
-								'type' => 'string',
-								'copy_to' => array( 'all' )
-							)
-						)
+					'label_en' => array(
+						'type' => 'string',
+						'copy_to' => array( 'all', 'all_near_match' )
+					),
+					'label_es' => array(
+						'type' => 'string',
+						'copy_to' => array( 'all', 'all_near_match' )
+					),
+					'description_ar' => array(
+						'type' => 'string',
+						'copy_to' => array( 'all' )
+					),
+					'description_en' => array(
+						'type' => 'string',
+						'copy_to' => array( 'all' )
+					),
+					'description_es' => array(
+						'type' => 'string',
+						'copy_to' => array( 'all' )
 					)
 				)
 			)
@@ -147,7 +145,7 @@ class CirrusSearchHookHandlersTest extends PHPUnit_Framework_TestCase {
 	}
 
 	private function newFieldDefinitions() {
-		$languageCodes = array( 'ar', 'es' );
+		$languageCodes = array( 'ar', 'en', 'es' );
 
 		return new WikibaseFieldDefinitions( array( 'labels', 'descriptions' ), $languageCodes );
 	}
