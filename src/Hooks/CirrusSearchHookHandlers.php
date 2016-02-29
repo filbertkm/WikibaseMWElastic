@@ -1,6 +1,6 @@
 <?php
 
-namespace Wikibase\Elastic\Hooks;
+namespace Wikibase\Search\Elastic\Hooks;
 
 use CirrusSearch\Connection;
 use CirrusSearch\Maintenance\MappingConfigBuilder;
