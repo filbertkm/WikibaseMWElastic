@@ -22,6 +22,9 @@
 		"wikibase/elastic": "dev-master"
 	},
 	"autoload": {
+		"classmap": [
+			"maintenance"
+		],
 		"psr-4": {
 			"Wikibase\\Search\\Elastic\\": "src"
 		}
