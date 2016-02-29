@@ -12,7 +12,9 @@
 		}
 	],
 	"require": {
-		"php": ">=5.5.9"
+		"php": ">=5.5.9",
+		"ruflin/elastica": "2.2.1",
+		"wikibase/data-model": "~5.0"
 	},
 	"autoload": {
 		"psr-4": {
