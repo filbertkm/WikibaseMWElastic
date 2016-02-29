@@ -27,9 +27,11 @@ class Searcher extends Maintenance {
 	}
 
 	public function execute() {
-		$configFactory = ConfigFactory::getDefaultInstance();
+		$config = ConfigFactory::getDefaultInstance()->makeConfig( 'CirrusSearch' );
+		$cluster = $config->get( 'CirrusSearchDefaultCluster' );
+		var_export( $cluster );
 
-		$searchExecutor = new SearchExecutor( $configFactory );
+		$searchExecutor = new SearchExecutor( $config );
 		$results = $searchExecutor->execute( $this->getArg() );
 
 		$printer = new SearchResultPrinter();

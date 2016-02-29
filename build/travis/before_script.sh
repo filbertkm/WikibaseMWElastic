@@ -18,6 +18,9 @@ function install_extension() {
 
 set -x
 
+# install elasticsearch
+curl -O https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.7.1.deb && sudo dpkg -i --force-confnew elasticsearch-1.7.1.deb
+
 originalDirectory=$(pwd)
 
 composer self-update
