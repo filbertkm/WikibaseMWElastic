@@ -1,13 +1,13 @@
 <?php
 
-namespace Wikibase\Elastic;
+namespace Wikibase\Search\Elastic\Hooks;
 
 use Wikibase\EntityContent;
 
 /**
  * Extension hooks
  */
-class Hooks {
+class WikibaseHookHandlers {
 
 	/**
 	 * @param EntityContent $content

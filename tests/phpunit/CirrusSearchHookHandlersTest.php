@@ -1,6 +1,6 @@
 <?php
 
-namespace Wikibase\Elastic\Tests\Hooks;
+namespace Wikibase\Search\Elastic\Tests;
 
 use Elastica\Document;
 use ParserOutput;
@@ -8,11 +8,11 @@ use PHPUnit_Framework_TestCase;
 use Title;
 use Wikibase\DataModel\Entity\Item;
 use Wikibase\Elastic\Fields\WikibaseFieldDefinitions;
-use Wikibase\Elastic\Hooks\CirrusSearchHookHandlers;
+use Wikibase\Search\Elastic\CirrusSearchHookHandlers;
 use Wikibase\Repo\WikibaseRepo;
 
 /**
- * @covers Wikibase\Elastic\Hooks\CirrusSearchHookHandlers
+ * @covers Wikibase\Search\Elastic\CirrusSearchHookHandlers
  *
  * @since 0.5
  *

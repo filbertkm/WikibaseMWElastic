@@ -13,16 +13,16 @@
 	},
 	"Hooks": {
 		"CirrusSearchMappingConfig": [
-			"\\Wikibase\\Elastic\\Hooks\\CirrusSearchHookHandlers::onCirrusSearchMappingConfig"
+			"\\Wikibase\\Search\\Elastic\\CirrusSearchHookHandlers::onCirrusSearchMappingConfig"
 		],
 		"CirrusSearchBuildDocumentParse": [
-			"\\Wikibase\\Elastic\\Hooks\\CirrusSearchHookHandlers::onCirrusSearchBuildDocumentParse"
+			"\\Wikibase\\Search\\Elastic\\CirrusSearchHookHandlers::onCirrusSearchBuildDocumentParse"
 		],
 		"CirrusSearchExtractSpecialSyntax": [
-			"\\Wikibase\\Elastic\\Hooks\\SpecialSearchSyntaxHookHandler::onCirrusSearchExtractSpecialSyntax"
+			"\\Wikibase\\Search\\Elastic\\SpecialSearchSyntaxHookHandler::onCirrusSearchExtractSpecialSyntax"
 		],
 		"WikibaseTextForSearchIndex": [
-			"\\Wikibase\\Elastic\\Hooks::onWikibaseTextForSearchIndex"
+			"\\Wikibase\\Search\\Elastic\\WikibaseHookHandlers::onWikibaseTextForSearchIndex"
 		]
 	},
 	"MessagesDirs": {

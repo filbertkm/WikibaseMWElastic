@@ -1,6 +1,6 @@
 <?php
 
-namespace Wikibase\Elastic\Hooks;
+namespace Wikibase\Search\Elastic;
 
 use Wikibase\Lib\ContentLanguages;
 use Wikibase\Lib\MediaWikiContentLanguages;
