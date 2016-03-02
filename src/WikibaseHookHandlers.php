@@ -1,6 +1,6 @@
 <?php
 
-namespace Wikibase\Search\Elastic\Hooks;
+namespace Wikibase\Search\Elastic;
 
 use Wikibase\EntityContent;
 
@@ -16,7 +16,7 @@ class WikibaseHookHandlers {
 	public static function onWikibaseTextForSearchIndex( EntityContent $content, &$text ) {
 		$text = '';
 
-		return false;
+		return true;
 	}
 
 }
