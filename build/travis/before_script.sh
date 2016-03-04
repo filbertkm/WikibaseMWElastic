@@ -20,6 +20,10 @@ set -x
 
 # install elasticsearch
 curl -O https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.7.1.deb && sudo dpkg -i --force-confnew elasticsearch-1.7.1.deb
+sudo /usr/share/elasticsearch/bin/plugin --install org.wikimedia.search/extra/1.7.1
+sudo service elasticsearch restart
+
+sleep 10
 
 originalDirectory=$(pwd)
 

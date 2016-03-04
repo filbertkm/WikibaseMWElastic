@@ -55,7 +55,7 @@ class SearchExecutorTest extends PHPUnit_Framework_TestCase {
 		$executor = new SearchExecutor(
 			$this->getConnection(),
 			$this->getConfig(),
-			uniqid( self::INDEX_NAME . '_' )
+			self::INDEX_NAME .'_missing_'
 		);
 
 		$results = $executor->execute( 'life', 3 );
@@ -67,7 +67,11 @@ class SearchExecutorTest extends PHPUnit_Framework_TestCase {
 		$index = $this->getIndex();
 
 		$indexCreator = new IndexCreator( $index, new AnalysisConfigBuilder( 'en', array() ) );
-		$indexCreator->createIndex( true, 'unlimited', 4, '0-2', 30, array(), true );
+		$status = $indexCreator->createIndex( true, 'unlimited', 4, '0-2', 30, array(), true );
+
+		if ( !$status->isOK() ) {
+			throw new \Exception( $status->getMessage()->text() );
+		}
 
 		$mappingConfigBuilder = new MappingConfigBuilder( false );
 		$mappingParams = $mappingConfigBuilder->buildConfig( 0 );
