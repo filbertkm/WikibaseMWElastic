@@ -8,6 +8,7 @@ use Content;
 use Elastica\Document;
 use ParserOutput;
 use Title;
+use Wikibase\Elastic\EntityIndexer;
 use Wikibase\Elastic\Fields\WikibaseFieldDefinitions;
 use Wikibase\EntityContent;
 use Wikibase\Lib\MediaWikiContentLanguages;
@@ -88,14 +89,9 @@ class CirrusSearchHookHandlers {
 		}
 
 		$fields = $this->fieldDefinitions->getFields();
-		$entity = $content->getEntity();
 
-		foreach ( $fields as $fieldName => $field ) {
-			if ( $field->hasFieldData( $entity ) ) {
-				$data = $field->getFieldData( $entity );
-				$document->set( $fieldName, $data );
-			}
-		}
+		$entityIndexer = new EntityIndexer( $fields );
+		$entityIndexer->doIndex( $content->getEntity(), $document );
 	}
 
 	/**
