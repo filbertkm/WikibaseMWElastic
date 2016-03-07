@@ -8,6 +8,8 @@ use Content;
 use Elastica\Document;
 use ParserOutput;
 use Title;
+use Wikibase\DataModel\Entity\Item;
+use Wikibase\DataModel\Entity\Property;
 use Wikibase\Elastic\EntityIndexer;
 use Wikibase\Elastic\Fields\WikibaseFieldDefinitions;
 use Wikibase\EntityContent;
@@ -64,8 +66,14 @@ class CirrusSearchHookHandlers {
 	public static function newFromGlobalState() {
 		$contentLanguages = new MediaWikiContentLanguages();
 
+		$entitySearchFields = array(
+			Item::ENTITY_TYPE => array( 'labels', 'descriptions' ),
+			Property::ENTITY_TYPE => array( 'labels', 'descriptions' )
+		);
+
 		return new self(
 			new WikibaseFieldDefinitions(
+				$entitySearchFields,
 				array( 'labels', 'descriptions' ),
 				$contentLanguages->getLanguages()
 			)
@@ -88,17 +96,18 @@ class CirrusSearchHookHandlers {
 			return;
 		}
 
-		$fields = $this->fieldDefinitions->getFields();
+		$entity = $content->getEntity();
+		$fields = $this->fieldDefinitions->getFieldsForIndexing( $entity->getType() );
 
 		$entityIndexer = new EntityIndexer( $fields );
-		$entityIndexer->doIndex( $content->getEntity(), $document );
+		$entityIndexer->doIndex( $entity, $document );
 	}
 
 	/**
 	 * @param array &$config
 	 */
 	public function addExtraFields( array &$config ) {
-		$fields = $this->fieldDefinitions->getFields();
+		$fields = $this->fieldDefinitions->getFieldsForMapping();
 
 		foreach ( $fields as $fieldName => $field ) {
 			$config['page']['properties'][$fieldName] = $field->getMapping();
