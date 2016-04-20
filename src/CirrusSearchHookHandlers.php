@@ -8,19 +8,30 @@ use Content;
 use Elastica\Document;
 use ParserOutput;
 use Title;
-use Wikibase\DataModel\Entity\Item;
-use Wikibase\DataModel\Entity\Property;
-use Wikibase\Elastic\EntityIndexer;
-use Wikibase\Elastic\Fields\WikibaseFieldDefinitions;
+use Wikibase\Elastic\FieldDefinitions\DispatchingFieldDefinitions;
+use Wikibase\Elastic\FieldDefinitions\FieldDefinitions;
+use Wikibase\Elastic\FieldDefinitions\ItemFieldDefinitions;
+use Wikibase\Elastic\FieldDefinitions\PropertyFieldDefinitions;
+use Wikibase\Elastic\Index\EntityFieldsIndexer;
 use Wikibase\EntityContent;
 use Wikibase\Lib\MediaWikiContentLanguages;
 
 class CirrusSearchHookHandlers {
 
 	/**
-	 * @var WikibaseFieldsDefinition
+	 * @var FieldDefinitions
 	 */
 	private $fieldDefinitions;
+
+	/**
+	 * @var EntityFieldsIndexer
+	 */
+	private $entityFieldsIndexer;
+
+	/**
+	 * @var string[]
+	 */
+	private $languageCodes;
 
 	/**
 	 * @param Document $document
@@ -38,8 +49,13 @@ class CirrusSearchHookHandlers {
 		ParserOutput $parserOutput,
 		Connection $connection
 	) {
-		$hookHandler = self::newFromGlobalState();
-		$hookHandler->indexExtraFields( $document, $content );
+		static $instance;
+
+		if ( !isset( $instance ) ) {
+			$instance = self::newFromGlobalState();
+		}
+
+		$instance->indexExtraFields( $document, $content );
 
 		return true;
 	}
@@ -61,30 +77,34 @@ class CirrusSearchHookHandlers {
 	}
 
 	/**
-	 * @return BuildDocumentParserHookHandler
+	 * @return self
 	 */
 	public static function newFromGlobalState() {
 		$contentLanguages = new MediaWikiContentLanguages();
+		$languageCodes = $contentLanguages->getLanguages();
 
-		$entitySearchFields = array(
-			Item::ENTITY_TYPE => array( 'labels', 'descriptions' ),
-			Property::ENTITY_TYPE => array( 'labels', 'descriptions' )
+		$itemFieldDefinitions = new ItemFieldDefinitions( $languageCodes );
+		$propertyFieldDefinitions = new PropertyFieldDefinitions( $languageCodes );
+
+		$fieldDefinitions = new DispatchingFieldDefinitions( [
+			$itemFieldDefinitions,
+			$propertyFieldDefinitions
+		] );
+
+		$entityFieldsIndexer = new EntityFieldsIndexer(
+			$itemFieldDefinitions,
+			$propertyFieldDefinitions
 		);
 
-		return new self(
-			new WikibaseFieldDefinitions(
-				$entitySearchFields,
-				array( 'labels', 'descriptions' ),
-				$contentLanguages->getLanguages()
-			)
-		);
+		return new self( $fieldDefinitions, $entityFieldsIndexer );
 	}
 
-	/**
-	 * @param WikibaseFieldDefinitions $fieldDefinitions
-	 */
-	public function __construct( WikibaseFieldDefinitions $fieldDefinitions ) {
+	public function __construct(
+		FieldDefinitions $fieldDefinitions,
+		EntityFieldsIndexer $entityFieldsIndexer
+	) {
 		$this->fieldDefinitions = $fieldDefinitions;
+		$this->entityFieldsIndexer = $entityFieldsIndexer;
 	}
 
 	/**
@@ -96,21 +116,17 @@ class CirrusSearchHookHandlers {
 			return;
 		}
 
-		$entity = $content->getEntity();
-		$fields = $this->fieldDefinitions->getFieldsForIndexing( $entity->getType() );
-
-		$entityIndexer = new EntityIndexer( $fields );
-		$entityIndexer->doIndex( $entity, $document );
+		$this->entityFieldsIndexer->doIndex( $content->getEntity(), $document );
 	}
 
 	/**
 	 * @param array &$config
 	 */
 	public function addExtraFields( array &$config ) {
-		$fields = $this->fieldDefinitions->getFieldsForMapping();
+		$properties = $this->fieldDefinitions->getMappingProperties();
 
-		foreach ( $fields as $fieldName => $field ) {
-			$config['page']['properties'][$fieldName] = $field->getMapping();
+		foreach ( $properties as $propertyName => $property ) {
+			$config['page']['properties'][$propertyName] = $property;
 		}
 	}
 
