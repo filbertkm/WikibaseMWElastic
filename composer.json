@@ -19,7 +19,7 @@
 	],
 	"require": {
 		"php": ">=5.5.9",
-		"wikibase/elastic": "dev-master"
+		"wikibase/elastic": "~0.1"
 	},
 	"autoload": {
 		"classmap": [
