@@ -8,19 +8,20 @@ use Content;
 use Elastica\Document;
 use ParserOutput;
 use Title;
-use Wikibase\DataModel\Entity\Item;
-use Wikibase\DataModel\Entity\Property;
-use Wikibase\Elastic\EntityIndexer;
+use Wikibase\Elastic\EntityFieldsIndexer;
 use Wikibase\Elastic\Fields\WikibaseFieldDefinitions;
+use Wikibase\Elastic\Mapping\WikibaseMappingBuilder;
 use Wikibase\EntityContent;
 use Wikibase\Lib\MediaWikiContentLanguages;
 
 class CirrusSearchHookHandlers {
 
 	/**
-	 * @var WikibaseFieldsDefinition
+	 * @var WikibaseMappingBuilder
 	 */
-	private $fieldDefinitions;
+	private $wikibaseMappingBuilder;
+
+	private $languageCodes;
 
 	/**
 	 * @param Document $document
@@ -65,26 +66,23 @@ class CirrusSearchHookHandlers {
 	 */
 	public static function newFromGlobalState() {
 		$contentLanguages = new MediaWikiContentLanguages();
+		$languageCodes = $contentLanguages->getLanguages();
 
-		$entitySearchFields = array(
-			Item::ENTITY_TYPE => array( 'labels', 'descriptions' ),
-			Property::ENTITY_TYPE => array( 'labels', 'descriptions' )
-		);
+		$wikibaseFieldDefinitions = new WikibaseFieldDefinitions( $languageCodes );
+		$fields = $wikibaseFieldDefinitions->getSearchFieldDefinitions();
 
-		return new self(
-			new WikibaseFieldDefinitions(
-				$entitySearchFields,
-				array( 'labels', 'descriptions' ),
-				$contentLanguages->getLanguages()
-			)
-		);
+		$wikibaseMappingBuilder = new WikibaseMappingBuilder( $fields );
+		$entityFieldsIndexer = new EntityFieldsIndexer( $fields, $languageCodes );
+
+		return new self( $wikibaseMappingBuilder, $entityFieldsIndexer );
 	}
 
-	/**
-	 * @param WikibaseFieldDefinitions $fieldDefinitions
-	 */
-	public function __construct( WikibaseFieldDefinitions $fieldDefinitions ) {
-		$this->fieldDefinitions = $fieldDefinitions;
+	public function __construct(
+		WikibaseMappingBuilder $wikibaseMappingBuilder,
+		EntityFieldsIndexer $entityFieldsIndexer
+	) {
+		$this->wikibaseMappingBuilder = $wikibaseMappingBuilder;
+		$this->entityFieldsIndexer = $entityFieldsIndexer;
 	}
 
 	/**
@@ -96,21 +94,17 @@ class CirrusSearchHookHandlers {
 			return;
 		}
 
-		$entity = $content->getEntity();
-		$fields = $this->fieldDefinitions->getFieldsForIndexing( $entity->getType() );
-
-		$entityIndexer = new EntityIndexer( $fields );
-		$entityIndexer->doIndex( $entity, $document );
+		$document = $this->entityFieldsIndexer->doIndex( $content->getEntity(), $document );
 	}
 
 	/**
 	 * @param array &$config
 	 */
 	public function addExtraFields( array &$config ) {
-		$fields = $this->fieldDefinitions->getFieldsForMapping();
+		$properties = $this->wikibaseMappingBuilder->getProperties();
 
-		foreach ( $fields as $fieldName => $field ) {
-			$config['page']['properties'][$fieldName] = $field->getMapping();
+		foreach ( $properties as $propertyName => $property ) {
+			$config['page']['properties'][$propertyName] = $property;
 		}
 	}
 
